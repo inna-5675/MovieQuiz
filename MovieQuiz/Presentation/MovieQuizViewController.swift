@@ -25,6 +25,7 @@ final class MovieQuizViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        imageView.layer.cornerRadius = 20
         show(quiz: convert(model: QuizQuestion(image: "The Godfather",
                                                text: "Рейтинг этого фильма больше чем 6?",
                                                correctAnswer: true)))
@@ -123,11 +124,7 @@ final class MovieQuizViewController: UIViewController {
         cuonterLabel.text = step.questionNumber
     }
     
-    let alert = UIAlertController(
-        title: "Этот раунд окончен!",
-        message: "Ваш результат ???",
-        preferredStyle: .alert)
-    
+   
     private func show(quiz result: QuizResultsViewModel) {
         let alert = UIAlertController(
             title: result.title,
