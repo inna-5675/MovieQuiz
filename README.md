@@ -1,33 +1,65 @@
-## **MovieQuiz**
+# Movie Poster Quiz
 
-MovieQuiz - это приложение с квизами о фильмах из топ-250 рейтинга и самых популярных фильмах по версии IMDb.
+**Movie Poster Quiz** is a quiz about movie posters where each question presents you with a movie overview text. Your task is to identify the correct movie poster from a choice of four options. 
 
-## **Ссылки**
+## Screenshot
 
-[Макет Figma](https://www.figma.com/file/l0IMG3Eys35fUrbvArtwsR/YP-Quiz?node-id=34%3A243)
+<img src="screenshot.png" width="400">
 
-[API IMDb](https://imdb-api.com/api#Top250Movies-header)
+## Features
+- **Extensive Movie Database**: Questions are sourced from hundreds of thousands of movies provided by  [TheMovieDB.org](https://www.themoviedb.org/).
+- **High Score Leaderboard**: Integrated with Apple's Game Center to track scores and enable competitive play.
 
-[Шрифты](https://code.s3.yandex.net/Mobile/iOS/Fonts/MovieQuizFonts.zip)
+- **Adjustable Gameplay Feel**: The balance between trivia-like questions and logic-based questions is controlled by popularity parameters. The more the quiz focuses on popular movies, the more it feels like a traditional trivia quiz. Conversely, the more it includes lesser-known and rare movies, the more it becomes a logical problem-solving experience.
 
-## **Описание приложения**
 
-- Одностраничное приложение с квизами о фильмах из топ-250 рейтинга и самых популярных фильмов IMDb. Пользователь приложения последовательно отвечает на вопросы о рейтинге фильма. По итогам каждого раунда игры показывается статистика о количестве правильных ответов и лучших результатах пользователя. Цель игры — правильно ответить на все 10 вопросов раунда.
+## Technologies
 
-## **Функциональные требования**
+- **Programming Language:** Swift
+- **Architecture:** MVVM (Model-View-ViewModel)
+- **Frameworks:** SwiftUI, Combine, Game Kit
+- **APIs:** TheMovieDB API
+- **Minimum iOS Version:** iOS 16
 
-- При запуске приложения показывается сплеш-скрин;
-- После запуска приложения показывается экран вопроса с текстом вопроса, картинкой и двумя вариантами ответа, “Да” и “Нет”, только один из них правильный;
-- Вопрос квиза составляется относительно IMDb рейтинга фильма по 10-балльной шкале, например: "Рейтинг этого фильма больше 6?";
-- Можно нажать на один из вариантов ответа на вопрос и получить отклик о том, правильный он или нет, при этом рамка фотографии поменяет цвет на соответствующий;
-- После выбора ответа на вопрос через 1 секунду автоматически появляется следующий вопрос;
-- После завершения раунда из 10 вопросов появляется алерт со статистикой пользователя и возможностью сыграть ещё раз;
-- Статистика содержит: результат текущего раунда (количество правильных ответов из 10 вопросов), количество сыгранных квизов, рекорд (лучший результат раунда за сессию, дата и время этого раунда), статистику сыгранных квизов в процентном соотношении (среднюю точность);
-- Пользователь может запустить новый раунд, нажав в алерте на кнопку "Сыграть еще раз";
-- При невозможности загрузить данные пользователь видит алерт с сообщением о том, что что-то пошло не так, а также кнопкой, по нажатию на которую можно повторить сетевой запрос.
 
-## **Технические требования**
+## Setup
+- **TMDB API Access Token:**  
+  To enable fetching movies from the full TMDB catalog, the TMDB API requires an access token. You can obtain an access token by following the instructions [here](https://developer.themoviedb.org/reference/intro/getting-started).  
+  Once you have the token, replace the placeholder in the `Info.plist` file with your token under the appropriate key.
 
-- Приложение должно поддерживать устройства iPhone с iOS 15, предусмотрен только портретный режим;
-- Элементы интерфейса адаптируются под разрешения экранов iPhone, начиная с X — вёрстка под SE и iPad не предусмотрена;
-- Экраны соответствует макету — использованы верные шрифты нужных размеров, все надписи находятся на нужном месте, расположение всех элементов, размеры кнопок и отступы — точно такие же, как в макете.
+  > **Note:** The quiz will still work without an API key because it includes a fallback local movies file for offline or tokenless use.
+
+- **Game Center Leaderboard:**  
+  The app uses a shared Game Center leaderboard for experimentation. please do not modify the target's bundle ID if you want to use it, as the shared leaderboard ID is tied to it.
+  If you wish to set up your own private leaderboard:
+  - Create your own app in App Store Connect with Game Center entitlements.
+  - Create a new leaderboard in App Store Connect.
+  - Replace the bundle ID with your new app's bundle ID.
+  - Update the `leaderboardID` value in the `Info.plist` file with your new leaderboard ID.
+    <br><br>
+  > **Note:** The Game Center leaderboard might not work on the iOS simulator. Use a physical device to test leaderboard functionality.
+
+
+## Popularity Parameters
+
+The **popularity parameters** are defined in the `TMDBMovieQueryHelper` class and include:
+
+- **`minVoteAverage`** 
+  - Specifies the minimum average vote a movie must have to be included in the quiz.  
+  - Value range: Decimal from `0` to `10`.
+
+- **`minVoteCount`**  
+  - Specifies the minimum number of votes a movie must have to be included in the quiz.  
+  - Value range: Integer from `0` to infinity.
+
+
+#### Effect on Quiz and Fetching Time
+Increasing these values will result in the quiz containing more popular movies. However, higher values also lengthen the data-fetching process during quiz creation because:
+- Movies that do not meet the criteria are filtered out.
+- Additional fetches may be required to gather enough movies that satisfy the specified parameters.
+
+## Acknowledgments
+
+This app uses the [TheMovieDB API](https://www.themoviedb.org/documentation/api) to fetch movie data.  
+
+**Disclaimer:** This product is not endorsed or certified by TheMovieDB.
